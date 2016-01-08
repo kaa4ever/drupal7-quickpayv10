@@ -60,7 +60,7 @@ function _quickpay_configuration_form($form, &$form_state) {
     '#id' => 'quickpay-method',
     '#title' => t('Accepted payment methods'),
     '#description' => t('Which payment methods to accept. NOTE: Some require special agreements.'),
-    '#default_value' => variable_get('quickpay_payment_method', ''),
+    '#default_value' => variable_get('quickpay_payment_method', 'creditcard'),
     '#options' => array(
       'creditcard' => t('Creditcard'),
       '3d-creditcard' => t('3D-Secure Creditcard'),
@@ -91,28 +91,28 @@ function _quickpay_configuration_form($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Autofee'),
     '#description' => t('If set, the fee charged by the acquirer will be calculated and added to the transaction amount.'),
-    '#default_value' => variable_get('quickpay_autofee', ''),
+    '#default_value' => variable_get('quickpay_autofee', FALSE),
   );
 
   $form['quickpay_autocapture'] = array(
     '#type' => 'checkbox',
     '#title' => t('Autocapture'),
     '#description' => t('If set, the transactions will be automatically captured.'),
-    '#default_value' => variable_get('quickpay_autocapture', ''),
+    '#default_value' => variable_get('quickpay_autocapture', FALSE),
   );
 
   $form['quickpay_debug'] = array(
     '#type' => 'checkbox',
     '#title' => t('Debug log'),
     '#description' => t('Log all request and responses to QuickPay in the Watchdog.'),
-    '#default_value' => variable_get('quickpay_debug', ''),
+    '#default_value' => variable_get('quickpay_debug', FALSE),
   );
 
   $form['quickpay_test_mode'] = array(
     '#type' => 'checkbox',
     '#title' => t('Test mode'),
     '#description' => t('Set the payment gateway in test mode.'),
-    '#default_value' => variable_get('quickpay_test_mode', ''),
+    '#default_value' => variable_get('quickpay_test_mode', FALSE),
   );
 
   return system_settings_form($form);

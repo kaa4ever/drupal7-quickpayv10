@@ -23,8 +23,74 @@ function quickpay_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'quickpay.forms.inc',
   );
-
   return $items;
+}
+
+/**
+ * Get a payment form.
+ *
+ * @param $form
+ * @param $form_state
+ * @param $parameters
+ *   A array of parameters:
+ *   - order_id (required)
+ *   - currency (required)
+ *   - amount (required)
+ *   - continue_url (required)
+ *   - cancel_url (required)
+ *   - custom_variables
+ *
+ * @return mixed
+ *
+ * @throws \QuickpayException
+ */
+function quickpay_payment_form($form, &$form_state, $parameters) {
+  $helper = new QuickpayHelper();
+  // Start by checking parameters.
+  $helper->checkParameters($parameters);
+  // Build the form.
+  $form['#method'] = 'POST';
+  $form['#action'] = 'https://payment.quickpay.net';
+  // Required variables.
+  $data['version'] = QUICKPAY_VERSION;
+  $data['merchant_id'] = variable_get('quickpay_merchant_id', '');
+  $data['agreement_id'] = variable_get('quickpay_agreement_id', '');
+  $data['order_id'] = $parameters['order_id'];
+  // Ensure that Order number is at least 4 characters. Else Quickpay will
+  // reject the request.
+  if (strlen($data['order_id']) < 4) {
+    $order_prefix = variable_get('quickpay_order_prefix', '');
+    $data['order_id'] = $order_prefix . substr('0000' . $parameters['order_id'], -4 + strlen($order_prefix));
+  }
+  $currency_info = $helper->currencyInfo($parameters['currency']);
+  $data['amount'] = $helper->wireAmount($parameters['amount'], $currency_info);
+  $data['currency'] = $currency_info['code'];
+  $data['continueurl'] = $parameters['continue_url'];
+  $data['cancelurl'] = $parameters['cancel_url'];
+  $data['callbackurl'] = url('quickpay/' . $parameters['order_id'], array('absolute' => TRUE));
+  // Set the optional variables.
+  $data['language'] = $helper->getLanguage();
+  $data['autocapture'] = variable_get('quickpay_autocapture', FALSE) ? '1' : '0';
+  $data['payment_methods'] = $helper->getPaymentMethods();
+  $data['autofee'] = variable_get('quickpay_autofee', FALSE) ? 1 : 0;
+  // Add any custom fields.
+  if (isset($parameters['custom_variables']) && is_array($parameters['custom_variables'])) {
+    foreach ($parameters['custom_variables'] as $key => $value) {
+      $data['variables[' . $key . ']'] = $value;
+    }
+  }
+  // Build the checksum.
+  $data['checksum'] = $helper->getChecksum($data);
+  // Add all data elements as hidden input fields.
+  foreach ($data as $name => $value) {
+    $form[$name] = array('#type' => 'hidden', '#value' => $value);
+  }
+  $form['submit'] = array(
+    '#id' => 'quickpay-submit-button',
+    '#type' => 'submit',
+    '#value' => t('Continue to QuickPay'),
+  );
+  return $form;
 }
 
 function _quickpay_callback_access($order_id) {
