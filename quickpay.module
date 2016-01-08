@@ -7,13 +7,15 @@
 // The protocol version we implement for the payment window.
 define('QUICKPAY_VERSION', 'v10');
 
+/**
+ * Implements hook_menu().
+ */
 function quickpay_menu() {
   $items = array();
   $items['quickpay/%'] = array(
     'title' => 'Quickpay callback page',
     'page callback' => '_quickpay_callback',
     'page arguments' => array(1),
-    'access arguments' => array(1),
     'access callback' => '_quickpay_callback_access',
   );
   $items['admin/config/system/quickpay'] = array(
@@ -93,41 +95,32 @@ function quickpay_payment_form($form, &$form_state, $parameters) {
   return $form;
 }
 
-function _quickpay_callback_access($order_id) {
-  /*$content = json_decode($request->getContent());
-  $quickpay = Quickpay::loadFromRequest($content);
-  //return hash_hmac("sha256", $request, $this->private_key);
-  if ($quickpay) {
-    $checksum_calculated = $quickpay->getChecksumFromRequest($request->getContent());
-    $checksum_requested = $request->server->get('HTTP_QUICKPAY_CHECKSUM_SHA256');
-    if (!empty($checksum_requested) && strcmp($checksum_calculated, $checksum_requested) === 0) {
-      return AccessResult::allowed();
-    }
-    \Drupal::logger('quickpay')->error('Computed checksum does not match header checksum.');
+/**
+ * Access callback for callback route.
+ *
+ * @return bool
+ */
+function _quickpay_callback_access() {
+  $helper = new QuickpayHelper();
+  $checksum_calculated = $helper->getChecksumFromRequest();
+  $checksum_requested = $_SERVER['HTTP_QUICKPAY_CHECKSUM_SHA256'];
+  if (!empty($checksum_requested) && strcmp($checksum_calculated, $checksum_requested) === 0) {
+    return TRUE;
   }
-  else {
-    \Drupal::logger('quickpay')->error('Could not load a Quickpay configuration from request.');
-  }
-  return AccessResult::forbidden();*/
+  watchdog('quickpay', 'Computed checksum does not match header checksum.', WATCHDOG_ERROR);
+  return FALSE;
 }
 
 /**
- * quickpay.callback:
-path: '/quickpay/{order_id}'
-defaults:
-_controller: '\Drupal\quickpay\Controller\CallbackController::callback'
-_title:
-requirements:
-_quickpay_callback_access_check: 'TRUE'
+ * The callback for the callback.
  *
- *
-quickpay.configuration_list:
-path: '/admin/config/quickpay'
-defaults:
-_entity_list: 'configuration'
-_title:
-requirements:
-_permission: 'administer site configuration'
- *
+ * @param string $order_id
+ *   The order ID for the transaction.
  */
-
+function _quickpay_callback($order_id) {
+  $transaction = new QuickpayTransaction($_POST);
+  foreach (module_implements('quickpay_callback') as $module) {
+    $function = $module . 'quickpay_callback';
+    $function($order_id, $transaction);
+  }
+}

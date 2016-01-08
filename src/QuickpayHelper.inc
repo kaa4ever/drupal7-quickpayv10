@@ -30,6 +30,15 @@ class QuickpayHelper implements QuickpayHelperInterface {
   /**
    * @inheritdoc
    */
+  public function getChecksumFromRequest() {
+    $private_key = variable_get('quickpay_private_key', '');
+    $request_body = file_get_contents("php://input");
+    return hash_hmac("sha256", $request_body, $private_key);
+  }
+
+    /**
+   * @inheritdoc
+   */
   public function getChecksum(array $data) {
     $api_key = variable_get('quickpay_api_key', '');
     ksort($data);

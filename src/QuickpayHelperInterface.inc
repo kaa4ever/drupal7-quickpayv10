@@ -15,6 +15,14 @@ interface QuickpayHelperInterface {
   public function checkParameters(array $parameters);
 
   /**
+   * Build the checksum from the request callback from quickpay.
+   *
+   * @return string
+   *   The checksum.
+   */
+  public function getChecksumFromRequest();
+
+  /**
    * Calculate the md5checksum for the request.
    *
    * http://tech.quickpay.net/payments/hosted/#checksum

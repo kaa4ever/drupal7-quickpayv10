@@ -4,6 +4,8 @@ package = QuickPay payment gateway
 core = 7.x
 version = 7.x-2.0
 
-files[] = QuickpayHelperInterface.inc
-files[] = QuickpayHelper.inc
-files[] = QuickpayException.inc
+files[] = src/QuickpayHelperInterface.inc
+files[] = src/QuickpayHelper.inc
+files[] = src/QuickpayException.inc
+files[] = src/QuickpayTransaction.inc
+files[] = src/QuickpayTransactionInterface.inc

@@ -1,19 +1,16 @@
 <?php
 /**
  * @file
- * Contains \Drupal\quickpay\QuickpayTransaction.
+ * Contains QuickpayTransaction.
  */
-
-namespace Drupal\quickpay;
-
-use Drupal\quickpay\Entity\Quickpay;
 
 /**
  * Abstracts a transaction.
  */
-class QuickpayTransaction {
+class QuickpayTransaction implements QuickpayTransactionInterface {
+
   /**
-   * The QuickPay instance related for the transaction.
+   * The QuickPay API class.
    */
   protected $quickpay;
 
@@ -30,17 +27,26 @@ class QuickpayTransaction {
   /**
    * Create a transaction object.
    *
-   * @param \Drupal\quickpay\Entity\Quickpay $quickpay
-   *   The config for this transaction.
    * @param mixed $transaction
    *   Either the ID of the transaction or information about the transaction as
    *   array or object.
    *
-   * @throws \Drupal\quickpay\QuickpayException
+   * @throws \QuickpayException
    *   If the transaction could not be parsed.
    */
-  public function __construct(Quickpay $quickpay, $transaction) {
-    $this->quickpay = $quickpay;
+  public function __construct($transaction) {
+    // Load the official Quickpay PHP API.
+    $path = drupal_get_path('module', 'quickpay') . '/src/Quickpay/Quickpay';
+    require_once("$path/QuickPay.php");
+
+    try {
+      $api_key = variable_get('quickpay_api_key', '');
+      $this->quickpay = new QuickPay(":{$api_key}");
+    }
+    catch(Exception $e) {
+      throw new QuickpayException('Could not load Quickpay API');
+    }
+
     // Check if the second parameter is the transaction itself, or the ID.
     if (is_object($transaction) || is_array($transaction)) {
       $this->loadFromResponse($transaction);
@@ -61,7 +67,7 @@ class QuickpayTransaction {
    * @param mixed $response
    *   Either array or object with properties.
    *
-   * @throws \Drupal\quickpay\QuickpayException
+   * @throws \QuickpayException
    *   If the response object could not be parsed.
    */
   private function loadFromResponse($response) {
@@ -115,11 +121,11 @@ class QuickpayTransaction {
   /**
    * Load transaction details from QuickPay.
    *
-   * @throws \Drupal\quickpay\QuickpayException
+   * @throws \QuickpayException
    *   If the request could not be loaded.
    */
   private function loadFromQuickpay() {
-    $transaction = $this->quickpay->request('https://api.quickpay.net/payments/' . $this->data['id']);
+    $transaction = $this->quickpay->request->get('/payments/' . $this->data['id']);
     $this->loadFromResponse($transaction);
   }
 
