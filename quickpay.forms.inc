@@ -108,13 +108,6 @@ function _quickpay_configuration_form($form, &$form_state) {
     '#default_value' => variable_get('quickpay_debug', FALSE),
   );
 
-  $form['quickpay_test_mode'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Test mode'),
-    '#description' => t('Set the payment gateway in test mode.'),
-    '#default_value' => variable_get('quickpay_test_mode', FALSE),
-  );
-
   return system_settings_form($form);
 }
 

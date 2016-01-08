@@ -70,7 +70,7 @@ function quickpay_payment_form($form, &$form_state, $parameters) {
   $data['callbackurl'] = url('quickpay/' . $parameters['order_id'], array('absolute' => TRUE));
   // Set the optional variables.
   $data['language'] = $helper->getLanguage();
-  $data['autocapture'] = variable_get('quickpay_autocapture', FALSE) ? '1' : '0';
+  $data['autocapture'] = variable_get('quickpay_autocapture', FALSE) ? 1 : 0;
   $data['payment_methods'] = $helper->getPaymentMethods();
   $data['autofee'] = variable_get('quickpay_autofee', FALSE) ? 1 : 0;
   // Add any custom fields.
