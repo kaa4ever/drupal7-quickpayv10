@@ -5,6 +5,8 @@
  */
 
 function _quickpay_configuration_form($form, &$form_state) {
+  drupal_add_css(drupal_get_path('module', 'quickpay') . '/quickpay.admin.css');
+
   $form['quickpay_merchant_id'] = array(
     '#type' => 'textfield',
     '#title' => t('Merchant ID'),
@@ -76,11 +78,11 @@ function _quickpay_configuration_form($form, &$form_state) {
     '#type' => 'checkboxes',
     '#id' => 'quickpay-cards',
     '#title' => t('Select accepted cards'),
-    '#default_value' => variable_get('quickpay_accepted_cards', ''),
+    '#default_value' => variable_get('quickpay_accepted_cards', []),
     '#options' => $options,
     '#states' => array(
       'visible' => array(
-        ':input[name="method"]' => array('value' => 'selected'),
+        ':input[name="quickpay_payment_method"]' => array('value' => 'selected'),
       ),
     ),
   );
@@ -104,6 +106,13 @@ function _quickpay_configuration_form($form, &$form_state) {
     '#title' => t('Debug log'),
     '#description' => t('Log all request and responses to QuickPay in the Watchdog.'),
     '#default_value' => variable_get('quickpay_debug', ''),
+  );
+
+  $form['quickpay_test_mode'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Test mode'),
+    '#description' => t('Set the payment gateway in test mode.'),
+    '#default_value' => variable_get('quickpay_test_mode', ''),
   );
 
   return system_settings_form($form);

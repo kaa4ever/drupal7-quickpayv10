@@ -1,0 +1,13 @@
+/*
+ * Styles for QuickPay admin.
+ */
+
+#quickpay-cards .form-item {
+  display: inline-block;
+  width: 30%;
+}
+
+#quickpay-cards .form-item img {
+  vertical-align: middle;
+  margin-right: 5px;
+}
