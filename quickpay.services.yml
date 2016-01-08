@@ -1,5 +1,0 @@
-services:
-  quickpay.access_checker:
-    class: Drupal\quickpay\Access\QuickpayCallbackAccessCheck
-    tags:
-      - { name: access_check, applies_to: _quickpay_callback_access_check }

@@ -1,0 +1,5 @@
+name = QuickPay V10 Core
+description = QuickPay payment gateway
+package = QuickPay payment gateway
+core = 7.x
+version = 7.x-2.0

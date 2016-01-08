@@ -6,3 +6,62 @@
 
 // The protocol version we implement for the payment window.
 define('QUICKPAY_VERSION', 'v10');
+
+function quickpay_menu() {
+  $items = array();
+  $items['quickpay/%'] = array(
+    'title' => 'Quickpay callback page',
+    'page callback' => '_quickpay_callback',
+    'page arguments' => array(1),
+    'access arguments' => array(1),
+    'access callback' => '_quickpay_callback_access',
+  );
+  $items['admin/config/system/quickpay'] = array(
+    'title' => 'Quickpay configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_quickpay_configuration_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'quickpay.forms.inc',
+  );
+
+  return $items;
+}
+
+function _quickpay_callback_access($order_id) {
+  /*$content = json_decode($request->getContent());
+  $quickpay = Quickpay::loadFromRequest($content);
+  //return hash_hmac("sha256", $request, $this->private_key);
+  if ($quickpay) {
+    $checksum_calculated = $quickpay->getChecksumFromRequest($request->getContent());
+    $checksum_requested = $request->server->get('HTTP_QUICKPAY_CHECKSUM_SHA256');
+    if (!empty($checksum_requested) && strcmp($checksum_calculated, $checksum_requested) === 0) {
+      return AccessResult::allowed();
+    }
+    \Drupal::logger('quickpay')->error('Computed checksum does not match header checksum.');
+  }
+  else {
+    \Drupal::logger('quickpay')->error('Could not load a Quickpay configuration from request.');
+  }
+  return AccessResult::forbidden();*/
+}
+
+/**
+ * quickpay.callback:
+path: '/quickpay/{order_id}'
+defaults:
+_controller: '\Drupal\quickpay\Controller\CallbackController::callback'
+_title:
+requirements:
+_quickpay_callback_access_check: 'TRUE'
+ *
+ *
+quickpay.configuration_list:
+path: '/admin/config/quickpay'
+defaults:
+_entity_list: 'configuration'
+_title:
+requirements:
+_permission: 'administer site configuration'
+ *
+ */
+
