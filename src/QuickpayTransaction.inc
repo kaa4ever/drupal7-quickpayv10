@@ -4,6 +4,8 @@
  * Contains QuickpayTransaction.
  */
 
+use QuickPay\QuickPay;
+
 /**
  * Abstracts a transaction.
  */
@@ -35,10 +37,6 @@ class QuickpayTransaction implements QuickpayTransactionInterface {
    *   If the transaction could not be parsed.
    */
   public function __construct($transaction) {
-    // Load the official Quickpay PHP API.
-    $path = drupal_get_path('module', 'quickpay') . '/src/Quickpay/Quickpay';
-    require_once("$path/QuickPay.php");
-
     try {
       $api_key = variable_get('quickpay_api_key', '');
       $this->quickpay = new QuickPay(":{$api_key}");
@@ -125,7 +123,7 @@ class QuickpayTransaction implements QuickpayTransactionInterface {
    *   If the request could not be loaded.
    */
   private function loadFromQuickpay() {
-    $transaction = $this->quickpay->request->get('/payments/' . $this->data['id']);
+    $transaction = $this->quickpay->request->get('/payments/' . $this->data['id'])->as_object();
     $this->loadFromResponse($transaction);
   }
 

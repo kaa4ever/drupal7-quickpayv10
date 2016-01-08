@@ -119,9 +119,11 @@ function _quickpay_callback_access() {
  *   The order ID for the transaction.
  */
 function _quickpay_callback($order_id) {
-  $transaction = new QuickpayTransaction($_POST);
+  $request_body = file_get_contents("php://input");
+  $request = json_decode($request_body);
+  $transaction = new QuickpayTransaction($request);
   foreach (module_implements('quickpay_callback') as $module) {
-    $function = $module . 'quickpay_callback';
+    $function = $module . '_quickpay_callback';
     $function($order_id, $transaction);
   }
 }
