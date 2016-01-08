@@ -9,3 +9,5 @@ files[] = src/QuickpayHelper.inc
 files[] = src/QuickpayException.inc
 files[] = src/QuickpayTransaction.inc
 files[] = src/QuickpayTransactionInterface.inc
+
+dependencies[] = composer_manager

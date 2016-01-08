@@ -101,13 +101,6 @@ function _quickpay_configuration_form($form, &$form_state) {
     '#default_value' => variable_get('quickpay_autocapture', FALSE),
   );
 
-  $form['quickpay_debug'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Debug log'),
-    '#description' => t('Log all request and responses to QuickPay in the Watchdog.'),
-    '#default_value' => variable_get('quickpay_debug', FALSE),
-  );
-
   return system_settings_form($form);
 }
 
