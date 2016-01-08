@@ -4,11 +4,59 @@
  * Module for testing/debugging the Quickpay payment window.
  */
 
-use Drupal\node\Entity\Node;
+
+function quickpay_example_menu() {
+  $items = array();
+  $items['quickpay_example/checkout'] = array(
+    'title' => 'Quickpay Example checkout',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_quickpay_example_checkout_form'),
+    'access callback' => TRUE,
+  );
+  $items['quickpay_example/success'] = array(
+    'title' => 'Quickpay Example success',
+    'page callback' => '_quickpay_example_success',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * The example checkout form.
+ *
+ * @param $form
+ * @param $form_state
+ *
+ * @return array
+ */
+function _quickpay_example_checkout_form($form, &$form_state) {
+  $parameters = [
+    'order_id' => time(),
+    'amount' => 1,
+    'currency' => 'DKK',
+    'continue_url' => url('quickpay_example/success', array('absolute' => TRUE)),
+    'cancel_url' => url('quickpay_example/checkout', array('absolute' => TRUE)),
+  ];
+
+  return drupal_get_form('quickpay_payment_form', $parameters);
+}
+
+/**
+ * Content for the success page.
+ *
+ * @return array
+ *   A renderable array.
+ */
+function _quickpay_example_success() {
+  return array(
+    '#type' => 'markup',
+    '#markup' => '<h1>Congratulations</h1><p>You just completed a purchase.</p>',
+  );
+}
 
 /**
  * Implements hook_quickpay_callback().
- */
+ *
 function quickpay_example_quickpay_callback($order_id, $transaction) {
   if ($transaction->approved) {
     // Load the order node and set the transaction ID.
@@ -22,4 +70,4 @@ function quickpay_example_quickpay_callback($order_id, $transaction) {
   else {
     \Drupal::logger('quickpay_test')->info('Transaction not approved for order ID: !id', array('!id' => $order_id));
   }
-}
+}*/

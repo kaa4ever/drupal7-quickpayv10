@@ -1,4 +1,0 @@
-quickpay_example.status:
-  route_name: quickpay_example.status
-  base_route: entity.node.canonical
-  title: Status
