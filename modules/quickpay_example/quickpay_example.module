@@ -11,8 +11,7 @@ function quickpay_example_menu() {
   $items = array();
   $items['quickpay_example/checkout'] = array(
     'title' => 'Quickpay Example checkout',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('_quickpay_example_checkout_form'),
+    'page callback' => '_quickpay_example_checkout_form',
     'access callback' => TRUE,
   );
   $items['quickpay_example/success'] = array(
@@ -31,12 +30,9 @@ function quickpay_example_menu() {
 /**
  * The example checkout form.
  *
- * @param $form
- * @param $form_state
- *
  * @return array
  */
-function _quickpay_example_checkout_form($form, &$form_state) {
+function _quickpay_example_checkout_form() {
   $parameters = [
     'order_id' => time(),
     'amount' => 1,

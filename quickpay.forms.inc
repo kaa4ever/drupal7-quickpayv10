@@ -4,10 +4,16 @@
  * Forms for Quickpay.
  */
 
-function _quickpay_configuration_form($form, &$form_state) {
+function quickpay_configuration_form($form, &$form_state) {
   drupal_add_css(drupal_get_path('module', 'quickpay') . '/quickpay.admin.css');
 
-  $form['quickpay_merchant_id'] = array(
+  $form['fs_quickpay'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Quickpay configuration'),
+    '#collapsible' => TRUE,
+  );
+
+  $form['fs_quickpay']['quickpay_merchant_id'] = array(
     '#type' => 'textfield',
     '#title' => t('Merchant ID'),
     '#description' => t('This is the Merchant ID from the Quickpay manager.'),
@@ -15,7 +21,7 @@ function _quickpay_configuration_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  $form['quickpay_agreement_id'] = array(
+  $form['fs_quickpay']['quickpay_agreement_id'] = array(
     '#type' => 'textfield',
     '#title' => t('Agreement ID'),
     '#description' => t('This is the Agreement ID from the Quickpay manager.'),
@@ -23,7 +29,7 @@ function _quickpay_configuration_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  $form['quickpay_api_key'] = array(
+  $form['fs_quickpay']['quickpay_api_key'] = array(
     '#type' => 'textfield',
     '#title' => t('API'),
     '#description' => t('This is the API key from the Quickpay manager.'),
@@ -31,7 +37,7 @@ function _quickpay_configuration_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  $form['quickpay_private_key'] = array(
+  $form['fs_quickpay']['quickpay_private_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Private'),
     '#description' => t('This is the private key from the Quickpay manager.'),
@@ -39,7 +45,7 @@ function _quickpay_configuration_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  $form['quickpay_order_prefix'] = array(
+  $form['fs_quickpay']['quickpay_order_prefix'] = array(
     '#type' => 'textfield',
     '#title' => t('Order ID prefix'),
     '#description' => t('Prefix for order IDs. Order IDs must be uniqe when sent to QuickPay, use this to resolve clashes.'),
@@ -47,7 +53,7 @@ function _quickpay_configuration_form($form, &$form_state) {
   );
 
   $languages = array_merge([LANGUAGE_NONE => t('Language of the user')], _quickpay_languages());
-  $form['quickpay_language'] = array(
+  $form['fs_quickpay']['quickpay_language'] = array(
     '#type' => 'select',
     '#title' => t('Language'),
     '#description' => t('The language for the credit card form.'),
@@ -55,7 +61,7 @@ function _quickpay_configuration_form($form, &$form_state) {
     '#default_value' => variable_get('quickpay_language', LANGUAGE_NONE),
   );
 
-  $form['quickpay_payment_method'] = array(
+  $form['fs_quickpay']['quickpay_payment_method'] = array(
     '#type' => 'radios',
     '#id' => 'quickpay-method',
     '#title' => t('Accepted payment methods'),
@@ -74,7 +80,7 @@ function _quickpay_configuration_form($form, &$form_state) {
     $options[$key] = empty($card['image']) ? $card['name'] : '<img src="/' . $card['image'] . '" />' . $card['name'];
   }
 
-  $form['quickpay_accepted_cards'] = array(
+  $form['fs_quickpay']['quickpay_accepted_cards'] = array(
     '#type' => 'checkboxes',
     '#id' => 'quickpay-cards',
     '#title' => t('Select accepted cards'),
@@ -87,14 +93,14 @@ function _quickpay_configuration_form($form, &$form_state) {
     ),
   );
 
-  $form['quickpay_autofee'] = array(
+  $form['fs_quickpay']['quickpay_autofee'] = array(
     '#type' => 'checkbox',
     '#title' => t('Autofee'),
     '#description' => t('If set, the fee charged by the acquirer will be calculated and added to the transaction amount.'),
     '#default_value' => variable_get('quickpay_autofee', FALSE),
   );
 
-  $form['quickpay_autocapture'] = array(
+  $form['fs_quickpay']['quickpay_autocapture'] = array(
     '#type' => 'checkbox',
     '#title' => t('Autocapture'),
     '#description' => t('If set, the transactions will be automatically captured.'),

@@ -22,7 +22,7 @@ function quickpay_menu() {
     'title' => 'Quickpay configuration',
     'description' => 'Settings for the Quickpay integration',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('_quickpay_configuration_form'),
+    'page arguments' => array('quickpay_configuration_form'),
     'access arguments' => array('administer site configuration'),
     'file' => 'quickpay.forms.inc',
   );
