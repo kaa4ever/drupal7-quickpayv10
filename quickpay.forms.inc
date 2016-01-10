@@ -76,7 +76,7 @@ function quickpay_configuration_form($form, &$form_state) {
 
   $options = array();
   // Add image to the cards where defined.
-  foreach (_quickpay_cards() as $key => $card) {
+  foreach (_quickpay_payment_methods() as $key => $card) {
     $options[$key] = empty($card['image']) ? $card['name'] : '<img src="/' . $card['image'] . '" />' . $card['name'];
   }
 
@@ -139,115 +139,56 @@ function _quickpay_languages() {
  * @return array
  *   Array with card name and image.
  */
-function _quickpay_cards() {
+function _quickpay_payment_methods() {
   $images_path = drupal_get_path('module', 'quickpay') . '/images/';
   return array(
+    'american-express' => array(
+      'name' => t('American Express'),
+      'image' => $images_path . 'amexpress.jpg',
+    ),
     'dankort' => array(
       'name' => t('Dankort'),
       'image' => $images_path . 'dan.jpg',
-    ),
-    'edankort' => array(
-      'name' => t('eDankort'),
-      'image' => $images_path . 'edan.jpg',
-    ),
-    'visa' => array(
-      'name' => t('Visa'),
-      'image' => $images_path . 'visa.jpg',
-    ),
-    'visa-dk' => array(
-      'name' => t('Visa, issued in Denmark'),
-      'image' => $images_path . 'visa.jpg',
-    ),
-    '3d-visa' => array(
-      'name' => t('Visa, using 3D-Secure'),
-      'image' => $images_path . '3d-visa.gif',
-    ),
-    '3d-visa-dk' => array(
-      'name' => t('Visa, issued in Denmark, using 3D-Secure'),
-      'image' => $images_path . '3d-visa.gif',
-    ),
-    'visa-electron' => array(
-      'name' => t('Visa Electron'),
-      'image' => $images_path . 'visaelectron.jpg',
-    ),
-    'visa-electron-dk' => array(
-      'name' => t('Visa Electron, issued in Denmark'),
-      'image' => $images_path . 'visaelectron.jpg',
-    ),
-    '3d-visa-electron' => array(
-      'name' => t('Visa Electron, using 3D-Secure'),
-    ),
-    '3d-visa-electron-dk' => array(
-      'name' => t('Visa Electron, issued in Denmark, using 3D-Secure'),
-    ),
-    'mastercard' => array(
-      'name' => t('Mastercard'),
-      'image' => $images_path . 'mastercard.jpg',
-    ),
-    'mastercard-dk' => array(
-      'name' => t('Mastercard, issued in Denmark'),
-      'image' => $images_path . 'mastercard.jpg',
-    ),
-    'mastercard-debet-dk' => array(
-      'name' => t('Mastercard debet card, issued in Denmark'),
-      'image' => $images_path . 'mastercard.jpg',
-    ),
-    '3d-mastercard' => array(
-      'name' => t('Mastercard, using 3D-Secure'),
-    ),
-    '3d-mastercard-dk' => array(
-      'name' => t('Mastercard, issued in Denmark, using 3D-Secure'),
-    ),
-    '3d-mastercard-debet-dk' => array(
-      'name' => t('Mastercard debet, issued in Denmark, using 3D-Secure'),
-    ),
-    '3d-maestro' => array(
-      'name' => t('Maestro'),
-      'image' => $images_path . '3d-maestro.gif',
-    ),
-    '3d-maestro-dk' => array(
-      'name' => t('Maestro, issued in Denmark'),
-      'image' => $images_path . '3d-maestro.gif',
-    ),
-    'jcb' => array(
-      'name' => t('JCB'),
-      'image' => $images_path . 'jcb.jpg',
-    ),
-    '3d-jcb' => array(
-      'name' => t('JCB, using 3D-Secure'),
-      'image' => $images_path . '3d-jcb.gif',
     ),
     'diners' => array(
       'name' => t('Diners'),
       'image' => $images_path . 'diners.jpg',
     ),
-    'diners-dk' => array(
-      'name' => t('Diners, issued in Denmark'),
-      'image' => $images_path . 'diners.jpg',
-    ),
-    'american-express' => array(
-      'name' => t('American Express'),
-      'image' => $images_path . 'amexpress.jpg',
-    ),
-    'american-express-dk' => array(
-      'name' => t('American Express, issued in Denmark'),
-      'image' => $images_path . 'amexpress.jpg',
-    ),
-    'danske-dk' => array(
-      'name' => t('Danske Netbetaling'),
-      'image' => $images_path . 'danskebank.jpg',
-    ),
-    'nordea-dk' => array(
-      'name' => t('Nordea Netbetaling'),
-      'image' => $images_path . 'nordea.jpg',
+    'edankort' => array(
+      'name' => t('eDankort'),
+      'image' => $images_path . 'edan.jpg',
     ),
     'fbg1886' => array(
       'name' => t('Forbrugsforeningen'),
       'image' => $images_path . 'forbrugsforeningen.gif',
     ),
-    'ikano' => array(
-      'name' => t('Ikano'),
-      'image' => $images_path . 'ikano.jpg',
+    'jcb' => array(
+      'name' => t('JCB'),
+      'image' => $images_path . 'jcb.jpg',
+    ),
+    'maestro' => array(
+      'name' => t('Maestro'),
+      'image' => $images_path . '3d-maestro.gif',
+    ),
+    'mastercard' => array(
+      'name' => t('Mastercard'),
+      'image' => $images_path . 'mastercard.jpg',
+    ),
+    'mastercard-debet' => array(
+      'name' => t('Mastercard debet card'),
+      'image' => $images_path . 'mastercard.jpg',
+    ),
+    'mobilepay' => array(
+      'name' => t('MobilePay Online'),
+      'image' => $images_path . 'mobilepay.jpg',
+    ),
+    'visa' => array(
+      'name' => t('Visa'),
+      'image' => $images_path . 'visa.jpg',
+    ),
+    'visa-electron' => array(
+      'name' => t('Visa Electron'),
+      'image' => $images_path . 'visaelectron.jpg',
     ),
     'paypal' => array(
       'name' => t('PayPal'),
@@ -259,6 +200,10 @@ function _quickpay_cards() {
     ),
     'viabill' => array(
       'name' => t('ViaBill'),
+      'image' => $images_path . 'viabill.png',
+    ),
+    'paii' => array(
+      'name' => t('Paii'),
       'image' => $images_path . 'viabill.png',
     ),
   );
