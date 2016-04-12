@@ -1,26 +1,13 @@
 {
+  "minimum-stability": "dev",
   "require": {
-    "QuickPay/quickpay-php-client": "*@dev"
+    "QuickPay/quickpay-php-client": "dev-master"
   },
   "repositories": [
     {
-      "type": "package",
-      "package": {
-        "name": "QuickPay/quickpay-php-client",
-        "version": "dev-master",
-        "dist": {
-          "url": "git://github.com/QuickPay/quickpay-php-client.git",
-          "type": "git"
-        },
-        "source": {
-          "url": "git://github.com/QuickPay/quickpay-php-client.git",
-          "type": "git",
-          "reference": "master"
-        },
-        "autoload": {
-          "classmap": ["QuickPay"]
-        }
-      }
+      "type": "vcs",
+      "url": "https://github.com/QuickPay/quickpay-php-client.git"
     }
   ]
 }
+
